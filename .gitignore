@@ -3,3 +3,6 @@ data_small
 lib
 .DS_Store
 *.pyc
+lib.zip
+data.zip
+.vscode

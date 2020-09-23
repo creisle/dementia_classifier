@@ -3,7 +3,7 @@ from dementia_classifier.analysis import feature_set, domain_adapt, blog, genera
 
 
 def save_features_to_database():
-    save_blog_to_sql.save_blog_data()
+    #save_blog_to_sql.save_blog_data()
     save_dbank_to_sql.save_all_to_sql()
 
 
@@ -12,7 +12,9 @@ def save_all_results():
     print "Saving: save_new_feature_results_to_sql()"
     print "-----------------------------------------"
     feature_set.save_new_feature_results_to_sql()
-
+    feature_set.save_new_feature_results_to_sql(polynomial_terms=False)
+    feature_set.save_new_feature_results_to_sql(polynomial_terms=True)
+    '''
     print "-----------------------------------------"
     print "Saving: save_ablation_results_to_sql()"
     print "-----------------------------------------"
@@ -32,15 +34,15 @@ def save_all_results():
     print "Saving: save_blog_ablation_results_to_sql()"
     print "-----------------------------------------"
     blog.save_blog_ablation_results_to_sql()
-
+    '''
 
 def save_all_plots():
     # Baselines
-    general_plots.plot_feature_selection_curve()
+    #general_plots.plot_feature_selection_curve()
     general_plots.vanilla_feature_set_plot()
-    feature_set.ablation_plot(metric="fms")
-    general_plots.plot_feature_rank('none')
-
+    #feature_set.ablation_plot(metric="fms")
+    #general_plots.plot_feature_rank('none')
+    '''
     # New features
     feature_set.new_feature_set_plot(metric='fms', absolute=True,  poly=False)
     feature_set.new_feature_set_plot(metric='fms', absolute=True,  poly=True)
@@ -71,8 +73,9 @@ def save_all_plots():
     # Domain adaptation appendix
     domain_adapt.good_classifiers_plot(metric='acc')
     domain_adapt.bad_classifiers_plot(metric='acc')
-
+    '''
     # Blog
+    '''
     blog.plot_blog_feature_selection_curve(metric='roc')
     blog.blog_plot()
     blog.blog_ablation_plot()
@@ -83,10 +86,10 @@ def save_all_plots():
     blog.blog_feature_box_plot('NP_to_PRP')
     blog.blog_feature_box_plot('MeanWordLength')
     blog.blog_feature_box_plot('getSUBTLWordScores')
-
+    '''
 
 def main():
-    save_features_to_database()
+    # save_features_to_database()
     save_all_results()
     save_all_plots()
 

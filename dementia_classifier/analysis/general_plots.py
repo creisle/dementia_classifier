@@ -99,6 +99,7 @@ def vanilla_feature_set_plot(show=False):
     classifiers = models.CLASSIFIER_KEYS
     for classifier in classifiers:
         for metric in models.METRICS:
+            print "classifier %s with metric %s" % (classifier, metric)
             df = get_vanilla_results(classifier, metric)
             util.print_ci_from_df(df['folds'], classifier, metric)
             dfs.append(df)
@@ -157,7 +158,7 @@ def plot_feature_selection_curve(show=False, metric='fms'):
         df = get_feature_selection_curve(classifier, metric)
         dfs.append(df)
     dfs = pd.concat(dfs)
-    
+
     plot_specs = {
         "title": "Feature Selection Curve",
         'x_label': 'Number of Features',

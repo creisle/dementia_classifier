@@ -29,12 +29,12 @@ def save_ablation_results_to_sql():
 
 
 def save_new_feature_results_to_sql(polynomial_terms=True):
-    new_feature_set = models.NEW_FEATURE_SETS
-    new_feature_set.append('none')
+    new_feature_set = ['none']
+    # new_feature_set.append('none')
     classifiers  = models.CLASSIFIERS
 
     prefix = NEW_FEATURES_RESULTS_PREFIX
-    
+
     if polynomial_terms:
         prefix = NEW_FEATURES_RESULTS_PREFIX + "_poly"
 
@@ -197,7 +197,7 @@ def ablation_plot(metric='acc'):
         'labelsize': 10,
         'rotation': 15
     }
-    
+
     figname = 'ablation_plot_%s.pdf' % metric
 
     bar_plot(dfs, figname, **plot_specs)
@@ -270,13 +270,13 @@ def new_feature_set_plot(metric='acc', absolute=True, poly=True, show=False):
         'show': show,
         'title': title,
     }
-    
+
     # We use polynomial terms as well for halves
     if poly:
         dfs = dfs.replace('halves', 'halves+quadratic')
     else:
         figname = figname + '_without_quadratic'
-    
+
     figname = figname + '.pdf'
     bar_plot(dfs, figname, **plot_specs)
 
@@ -284,12 +284,12 @@ def new_feature_set_plot(metric='acc', absolute=True, poly=True, show=False):
 def feature_box_plot(feature):
     print "Plotting feature_box_plot, feature %s" % feature
     df = get_feature(feature)
-    
+
     figname = 'dbank_boxplot_%s.pdf' % feature
-    
+
     plot_specs = {
         'x': 'Dementia',
         'y': feature,
     }
-    
+
     util.box_plot(df, figname, **plot_specs)

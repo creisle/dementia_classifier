@@ -28,15 +28,16 @@ def save_dementiabank_text_features():
     data = get_data.parse_dementiabank()
     frames = []
     # for key in data:
-    for key in data.keys():
+    total = len(data)
+    for i, key in enumerate(data.keys()):
         if data[key]:
-            print "Processing: %s" % key
+            print "Processing: %s (%s / %s)" % (key, i + 1, total)
             feat_dict = get_dbank_text_features(data[key])
             feat_dict['interview'] = key.replace('.txt', 'c')
             frames.append(feat_dict)
         else:
             print "%s empty, skipping" % key
-  
+
     feat_df = pd.DataFrame(frames)
 
     # Save to database
@@ -50,18 +51,18 @@ def save_diagnosis():
 
 def save_demographic():
     demographic = pd.read_csv(settings.DBANK_AGE_GENDER, sep=' ')
-    
+
     # Impute missing values with average male and female age
     male_avg    = demographic[demographic['gender'] == 'male'].age.mean()
     female_avg  = demographic[demographic['gender'] == 'female'].age.mean()
-    
+
     male        = demographic[demographic['gender'] == 'male'].fillna(male_avg)
     female      = demographic[demographic['gender'] == 'female'].fillna(female_avg)
-    
+
     demographic = pd.concat([male, female])
     demographic.to_sql(SQL_DBANK_DEMOGRAPHIC, cnx, if_exists='replace', index=False)
 
-    
+
 def save_acoustic():
     # Extract control acoustic features
     control  = acoustic.get_all(settings.SOUNDFILE_CONTROL_DATA_PATH)
@@ -109,4 +110,3 @@ def save_all_to_sql():
     save_discourse()
     save_diagnosis()
     save_demographic()
-

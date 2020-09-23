@@ -25,10 +25,11 @@ def get_blog_text_features(datum):
 
 def process_blog(blog, name):
     posts = []
-    for post_id in blog:
+    total = len(blog)
+    for i, post_id in enumerate(blog):
         post = blog[post_id]
         if post:
-            print 'Processing %s' % post_id
+            print 'Processing %s (%s / %s)' % (post_id, i + 1, total)
             feat_dict = pos_phrases.get_all(post)
             feat_dict.update(pos_syntactic.get_all(post))
             feat_dict.update(psycholinguistic.get_psycholinguistic_features(post))
@@ -37,7 +38,7 @@ def process_blog(blog, name):
             feat_dict['id'] = post_id
             posts += [feat_dict]
     return posts
-    
+
 
 def in_database(name):
     try:
@@ -72,4 +73,3 @@ def save_blog_quality():
 def save_blog_data():
     save_all_blogs()
     save_blog_quality()
-

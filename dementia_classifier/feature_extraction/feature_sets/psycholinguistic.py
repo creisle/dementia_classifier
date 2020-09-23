@@ -5,6 +5,8 @@ from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
 import string
 from nltk.corpus import wordnet as wn
+import pandas as pd
+import os
 
 
 # Global psycholinguistic data structures
@@ -137,25 +139,18 @@ def getPsycholinguisticScore(interview, measure):
 
 
 def _getSUBTLWordScoresFromURL(wordlist):
-    # Use set so words are unique
+
     unknown_words = set([w.lower() for w in wordlist if w not in SUBTL_cached_scores])
+    rows = set([w.lower() for w in wordlist if w not in SUBTL_cached_scores])
+    lex = pd.read_csv('data/SUBTLEXus74286wordstextversion.tsv', sep='\t')
     # Load into cache all unknown words
     if unknown_words:
-        url = 'http://subtlexus.lexique.org/moteur2/simple.php'
-        encoded_words = '\n'.join(unknown_words)
-        params = {'database': 'subtlexus', 'mots': encoded_words}
-        r = requests.get(url, params=params)
-        rows = []
-        table = BeautifulSoup(r.content, "html.parser")
-        # Parse datatable to get SUBTLwf scores
-        for row in table.findAll("tr"):
-            cells = row.findAll("td")
-            row = [c.findAll(text=True)[0] for c in cells[:10]]
-            rows.append(row)
-        # Fill dictionary, ignore header row
-        for row in rows[1:]:
-            SUBTL_cached_scores[row[0]] = float(row[5])
-            unknown_words.remove(row[0])
+        for word in rows:
+            try:
+                SUBTL_cached_scores[word] = float(lex.loc[lex['Word'] == word].iloc[0]['SUBTLWF'])
+                unknown_words.remove(word)
+            except IndexError:
+                continue
         # Words remaining in unknown words don't have SUBTL word scores.
         # Add them to dict with score of 0 to prevent redundant calls to
         for word in unknown_words:
@@ -605,7 +600,7 @@ def get_farleft_keyword_set():
 
 
 def get_centerleft_keyword_set():
-    return BOY + COOKIE + STOOL + STEAL + FALL + KITCHEN + CUPBOARD 
+    return BOY + COOKIE + STOOL + STEAL + FALL + KITCHEN + CUPBOARD
 
 
 def get_farright_keyword_set():
