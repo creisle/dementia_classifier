@@ -89,7 +89,7 @@ def save_all_plots():
     '''
 
 def main():
-    # save_features_to_database()
+    save_features_to_database()
     save_all_results()
     save_all_plots()
 
